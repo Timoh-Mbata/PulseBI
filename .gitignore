@@ -1,3 +1,43 @@
-# Remove the .env entry
-# .env
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Flask/Python-related
+instance/
+*.db
+*.sqlite3
+*.log
+
+# Environment variables
 .env
+
+# VS Code settings (optional)
+.vscode/
+
+# macOS system files (optional)
+.DS_Store
+
+# pycache from tests or modules
+**/__pycache__/
+
+# Pytest cache
+.pytest_cache/
+
+# Migrations (optional – only if you want to ignore generated migration files)
+#migrations/
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# pip freeze
+requirements.txt~
+requirements.lock~

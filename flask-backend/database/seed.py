@@ -1,13 +1,13 @@
-
 from datetime import datetime
-from app import db, create_app
-from models import User, DataSource, Metric, LiveData, Prediction, Alert
+from ..app_configured.configure import Config, db  # Relative import
+from ..creater import create_app
+from ..models.db_models import User, DataSource, Metric, LiveData, Prediction, Alert
 
 app = create_app()
 
 with app.app_context():
-    db.drop_all() 
-    db.create_all()  
+    db.drop_all()  # Drop all tables
+    db.create_all()  # Create all tables
 
     # 👤 Users
     admin = User(username="admin", email="admin@pulsebi.com", role="admin", password_hash="hashed_admin_password")
@@ -23,7 +23,7 @@ with app.app_context():
     cart = Metric(name="Cart_Abandonment", unit="%", description="Users who abandon their carts")
 
     db.session.add_all([admin, jane, pos, web, sales, conversion, cart])
-    db.session.commit()
+    db.session.commit()  # Commit to get IDs for metrics and data sources
 
     # 📈 Live Data
     live_entries = [
@@ -47,5 +47,5 @@ with app.app_context():
     ]
     db.session.add_all(alerts)
 
-    db.session.commit()
+    db.session.commit()  # Commit all entries into the database
     print("✅ Seed data successfully loaded into the database!")

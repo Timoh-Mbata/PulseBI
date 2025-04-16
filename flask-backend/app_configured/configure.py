@@ -1,7 +1,9 @@
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 import os
+load_dotenv()  
 
-load_dotenv()  # Load from .env
+db=SQLAlchemy()
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")

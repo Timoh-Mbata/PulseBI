@@ -57,7 +57,7 @@ const routes = [
     component: UserSettings,
   },
   {
-    path: '/data-sources',
+    path: '/admin/data-sources',
     name: 'DataSources',
     component: DataSources,
   },
@@ -67,7 +67,7 @@ const routes = [
     component: KpiSummary,
   },
   {
-    path: '/live-data',
+    path: '/admin/live-data',
     name: 'LiveData',
     component: LiveData,
   },
@@ -88,7 +88,7 @@ const routes = [
   },
   {
     path: '/',
-    redirect: '/user-dashboard'
+    redirect: '/landing-page'
   }
 ];
 

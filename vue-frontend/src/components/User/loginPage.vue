@@ -59,6 +59,8 @@ export default {
       loginError: '',
       isLoggedIn: false,
       username: '',
+      role: '',
+      dashboardRoute: '', // New data property to hold the dashboard route
     };
   },
   methods: {
@@ -83,10 +85,12 @@ export default {
           localStorage.setItem('access_token', response.data.access_token);
 
           this.isLoggedIn = true;
-          this.username = response.data.username;  // Assuming the API response includes the username
+          this.username = response.data.username || 'User'; // Default to 'User' if not provided
+          this.role = response.data.role; // Get the role from the response
+          this.dashboardRoute = response.data.dashboard; // Get the dashboard route from the response
 
-          // Redirect to the dashboard
-          this.$router.push('/user-dashboard');
+          // Redirect to the dashboard based on role
+          this.$router.push(this.dashboardRoute);
         } else {
           this.loginError = response.data.message;
         }
@@ -97,6 +101,8 @@ export default {
   },
 };
 </script>
+
+
 <style scoped>
 .login-container {
   width: 100%;

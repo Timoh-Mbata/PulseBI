@@ -1,20 +1,20 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow">
-    <h2 class="text-lg font-semibold mb-4">User Settings</h2>
-    <div class="space-y-4">
+  <div class="settings-panel">
+    <h2>User Settings</h2>
+    <div class="form-section">
       <!-- Theme Setting -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Theme</label>
-        <select v-model="selectedTheme" @change="changeTheme" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white">
+      <div class="form-group">
+        <label for="theme">Theme</label>
+        <select v-model="selectedTheme" @change="changeTheme" id="theme">
           <option value="light">Light</option>
           <option value="dark">Dark</option>
         </select>
       </div>
 
       <!-- Workspace Setting -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Workspace</label>
-        <select v-model="selectedWorkspace" class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-white">
+      <div class="form-group">
+        <label for="workspace">Workspace</label>
+        <select v-model="selectedWorkspace" id="workspace">
           <option value="default">Default</option>
           <option value="marketing">Marketing</option>
           <option value="sales">Sales</option>
@@ -27,26 +27,78 @@
 <script setup>
 import { ref, watch } from 'vue';
 
-// Reactive variables for theme and workspace settings
 const selectedTheme = ref(localStorage.getItem('theme') || 'light');
 const selectedWorkspace = ref(localStorage.getItem('workspace') || 'default');
 
-// Function to change theme and save it to localStorage
 const changeTheme = () => {
   if (selectedTheme.value === 'dark') {
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add('dark-mode');
     localStorage.setItem('theme', 'dark');
   } else {
-    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.remove('dark-mode');
     localStorage.setItem('theme', 'light');
   }
 };
 
-// Watch for changes to workspace setting and save it to localStorage
 watch(selectedWorkspace, (newWorkspace) => {
   localStorage.setItem('workspace', newWorkspace);
 });
 
-// Initialize theme on component mount
 changeTheme();
 </script>
+
+<style scoped>
+.settings-panel {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  max-width: 480px;
+  margin: 2rem auto;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s ease;
+}
+
+.dark-mode .settings-panel {
+  background: #1e1e2f;
+  color: #f0f0f0;
+}
+
+.settings-panel h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #2c3e50;
+}
+
+.dark-mode .settings-panel h2 {
+  color: #ffffff;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #555;
+}
+
+.dark-mode label {
+  color: #ccc;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.dark-mode select {
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+</style>

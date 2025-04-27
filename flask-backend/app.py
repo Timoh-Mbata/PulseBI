@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 from app_configured.configure import db
-from .creater import create_app
+from creater import create_app
 from flask_migrate import Migrate
 app = create_app()
 migrate = Migrate(app, db)

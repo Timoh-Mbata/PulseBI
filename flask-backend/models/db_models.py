@@ -9,7 +9,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     role = db.Column(db.String(20), default='user')  
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(1024), nullable=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -98,3 +98,58 @@ class Alert(db.Model):
 
     def __repr__(self):
         return f"<Alert {self.alert_message}>"
+
+class Customers(db.Model):
+    __tablename__='customers'
+    __table_args__ = {'extend_existing':True}
+    id = db.Column(db.Integer , primary_key=True)
+    First_Name = db.Column(db.String,nullable=False)
+    Last_Name = db.Column(db.String,nullable=False)
+    Email = db.Column(db.String,nullable=False)
+    Phone = db.Column(db.String,nullable=False)
+    status=db.Column(db.String,nullable=False)
+    
+    def __repr__(self):
+        return f"<Customers {self.First_Name}"
+    
+class Products(db.Model):
+    __tablename__ = 'products'
+    __table_args__ = {'extend_existing':True}
+    id = db.Column(db.Integer,primary_key=True)
+    product_name = db.Column(db.String,nullable=False)
+    product_catgory=db.Column(db.String,nullable=False)
+    Price = db.Column(db.Integer,nullable=False)
+    Stock = db.Column(db.Integer,nullable=False)
+    def __repr__(self):
+        return f"<Product {self.product_name}"
+    
+
+class Sales(db.Model):
+    __tablename__='sales'
+    __table_args__ = {'extend_existing':True}
+    id = db.Column(db.Integer,primary_key=True)
+    customerid = db.Column(db.Integer,db.ForeignKey('customers.id'))
+    productid = db.Column(db.Integer,db.ForeignKey('products.id'))
+    quantity = db.Column(db.Integer,nullable=False)
+    amount = db.Column(db.Integer,nullable=False)
+    date = db.Column(db.Date ,nullable=False)
+    status = db.Column(db.String,default='Completed',nullable=False)
+    customer = db.relationship('Customers', backref='sales')
+    product = db.relationship('Products', backref='sales')
+
+    def __repr__(self):
+        return f"<Sales {self.Amount}"
+    
+
+class Feature(db.Model):
+    __tablename__ = 'features'
+    __table_args__ = {'extend_existing': True} 
+    id = db.Column(db.Integer, primary_key=True)
+    prev_day_revenue = db.Column(db.Float, nullable=False)
+    day_of_week = db.Column(db.String(20), nullable=False)
+    is_weekend = db.Column(db.Boolean, nullable=False)
+    productid = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f"<Feature {self.id}>"

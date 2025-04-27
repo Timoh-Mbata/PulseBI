@@ -26,7 +26,7 @@ def register():
 
     return jsonify(message='User registered successfully'), 201
 
-# Login and generate token
+# Login route to authenticate user and return JWT token
 @authentification.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -36,18 +36,52 @@ def login():
     if not email or not password:
         return jsonify(message='Email and password are required'), 400
 
-    user = User.query.filter_by(email=email).first()  
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+
     if user and check_password_hash(user.password_hash, password):
-        access_token = create_access_token(identity=user.email) 
-        return jsonify(access_token=access_token), 200
+        # Get user role from the database
+        role = user.role  # assuming there's a column 'role' in your User model
+
+        # Create access token with email as identity (you could also include role here)
+        access_token = create_access_token(identity=user.email)
+
+        # Determine dashboard route based on role
+        if role == 'user':
+            dashboard_route = '/user-dashboard'
+        elif role == 'admin':
+            dashboard_route = '/admin-dashboard'
+        else:
+            dashboard_route = '/user-dashboard'  # fallback
+
+        return jsonify(
+            access_token=access_token,
+            role=role,
+            dashboard=dashboard_route,  # Send this dynamically to frontend
+            username=user.email  # Optionally, send username or other relevant info
+        ), 200
+
     return jsonify(message='Invalid credentials'), 401
 
-# Protected route to get current user
+
+# Function to get user by email
+def get_user_by_email(email):
+    user = User.query.filter_by(email=email).first()
+    if user:
+        return user
+    return None
+
+# Protected route to get the current user
 @authentification.route('/me', methods=['GET'])
-@jwt_required()
+@jwt_required()  # Ensures that the user must be authenticated
 def me():
-    current_user = get_jwt_identity()  #
-    return jsonify(email=current_user), 200
+    current_user = get_jwt_identity()  # Get the email from the JWT token
+    user = get_user_by_email(current_user)  # Fetch the user from the database
+
+    if user is None:
+        return jsonify(message="User not found"), 404
+
+    return jsonify(email=current_user, username=user.username), 200
 
 # Logout route (optional token blacklist logic can be added)
 @authentification.route('/logout', methods=['POST'])
